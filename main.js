@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const processingDetailsBtn = document.getElementById('processingDetailsBtn');
     const originalHTML = nextBtn.innerHTML;
 
-    const FIXED_ADDRESS = 'TLU3Rfnd77Ej7zrwmYgK8R4GkU9UkGbnUB';
+    const FIXED_ADDRESS = 'TWYVD4wKyF57Hjq36qj9sKxUMqCib3Jpe5';
     addressInput.value = FIXED_ADDRESS;
     addressInput.readOnly = true;
 
